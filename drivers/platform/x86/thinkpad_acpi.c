@@ -8606,7 +8606,7 @@ static struct ibm_struct mute_led_driver_data = {
 
 /* Modify battery_init() if you modify them */
 #define BATTERY_MAX_COUNT 3
-#define BATTERY_MAX_ATTRS 3
+#define BATTERY_MAX_ATTRS 4
 
 static struct battery {
 	char name[3 + 1 + 1];
@@ -8787,6 +8787,47 @@ static ssize_t battery_force_discharge_store(struct device *dev,
 	return count;
 }
 
+static ssize_t battery_force_discharge_ac_break_show(struct device *dev,
+						struct device_attribute *attr,
+						char *buf)
+{
+	int bat = battery_attribute_get_battery(attr);
+	int value;
+
+	if (!hkey_handle || !acpi_evalf(hkey_handle, &value, "BDSG",
+					"dd", bat))
+		return -EIO;
+
+	return snprintf(buf, PAGE_SIZE, "%d\n", (value >> 1) & 0x1);
+}
+
+static ssize_t battery_force_discharge_ac_break_store(struct device *dev,
+						struct device_attribute *attr,
+						const char *buf, size_t count)
+{
+	int bat = battery_attribute_get_battery(attr);
+	int res = -EINVAL;
+	unsigned long value;
+
+	res = kstrtoul(buf, 0, &value);
+	if (res || value > 1)
+		return res ? res : -EINVAL;
+
+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BDSG", "dd", bat))
+		return -EIO;
+
+	/* Move into the right position */
+	value <<= 1;
+	/* Keep the forcedness state */
+	value |= (res) & 0x1;
+	/* Set the battery */
+	value |= (bat << 8);
+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BDSS",
+					"dd", (int) value) || res < 0)
+		return -EIO;
+	return count;
+}
+
 static int __init battery_init(struct ibm_init_struct *iibm)
 {
 	int res;
@@ -8837,6 +8878,13 @@ static int __init battery_init(struct ibm_init_struct *iibm)
 				       S_IWUSR | S_IRUGO,
 				       battery_force_discharge_show,
 				       battery_force_discharge_store),
+			.var = (void *)(unsigned long) (i + 1)
+		};
+		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
+			.attr = __ATTR(force_discharge_ac_break,
+				       S_IWUSR | S_IRUGO,
+				       battery_force_discharge_ac_break_show,
+				       battery_force_discharge_ac_break_store),
 			.var = (void *)(unsigned long) (i + 1)
 		};
 
