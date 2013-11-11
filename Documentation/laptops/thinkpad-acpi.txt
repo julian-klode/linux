@@ -1379,6 +1379,18 @@ battery sysfs attribute: force_discharge_ac_break
 
 	Break the discharging when the AC disconnects (0 or 1)
 
+battery sysfs attribute: inhibit_charge_minutes
+
+	Inhibit charging for the specified amount of minutes. This attribute
+	may not be very precise, the charging may start again some seconds
+	earlier than requested. It's also write-only until someone figured out
+	how reading that value works.
+
+	Values range: -1 to 720
+
+	The value -1 is supposed to mean permanently.
+
+
 Multiple Commands, Module Parameters
 ------------------------------------
 
