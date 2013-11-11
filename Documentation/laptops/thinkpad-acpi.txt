@@ -46,6 +46,7 @@ detailed description):
 	- Fan control and monitoring: fan speed, fan enable/disable
 	- WAN enable and disable
 	- UWB enable and disable
+	- Charging control
 
 A compatibility table by model and feature is maintained on the web
 site, http://ibm-acpi.sf.net/. I appreciate any success or failure
@@ -1355,6 +1356,20 @@ Sysfs notes:
 	rfkill controller switch "tpacpi_uwb_sw": refer to
 	Documentation/rfkill.txt for details.
 
+Charging control
+----------------
+sysfs attribute groups: BAT0, BAT1, and so on, depending on how many batteries
+are supported by the embedded controller.
+
+This feature controls the battery charging process.
+
+battery sysfs attribute: start_charge_thresh
+
+	A percentage value from 0-99%, controlling when charging should start
+
+battery sysfs attribute: stop_charge_thresh
+
+	A percentage value from 1-100%, controlling when charging should stop
 
 Multiple Commands, Module Parameters
 ------------------------------------
