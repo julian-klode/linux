@@ -1375,6 +1375,10 @@ battery sysfs attribute: force_discharge
 
 	Force discharging (0 or 1)
 
+battery sysfs attribute: force_discharge_ac_break
+
+	Break the discharging when the AC disconnects (0 or 1)
+
 Multiple Commands, Module Parameters
 ------------------------------------
 
