@@ -8679,7 +8679,7 @@ static int battery_write_stop_charge_thresh(int bat, int value,
 		int start = battery_read_threshold(bat, "BCTG");
 		if (start < 0)
 			return start;
-		if (value != 0)
+		if (start >= value)
 			res = battery_write_start_charge_thresh(bat, value - 1,
 								FALSE);
 		if (res)
