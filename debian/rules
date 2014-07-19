@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+VERSION=$(shell dpkg-parsechangelog | sed -n 's/^Version: *\([^-]\+\)/\1/p')
+%:
+	dh $@ --with=dkms
+
+override_dh_auto_clean:
+	sh debian/update-ignore.sh > debian/source/options
+
+override_dh_auto_build:
+
+override_dh_auto_configure:
+
+override_dh_auto_install:
+	mkdir -p  debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)
+	cp debian/Makefile debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)
+	sed -r 's/#define TPACPI_VERSION "(.*)"/#define TPACPI_VERSION "\1jak1"/g' drivers/platform/x86/thinkpad_acpi.c  > debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)/thinkpad_acpi.c
+
+override_dh_auto_test:
+
+
+override_dh_dkms:
+	dh_dkms -V 
