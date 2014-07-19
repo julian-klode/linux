@@ -1,3 +1,9 @@
+thinkpad-acpi-patched (3.14jak1) unstable; urgency=medium
+
+  * Fix packaging
+
+ -- Julian Andres Klode <jak@jak-linux.org>  Sun, 20 Jul 2014 00:56:17 +0200
+
 thinkpad-acpi-patched (3.14) unstable; urgency=medium
 
   * Initial release
