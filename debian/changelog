@@ -1,0 +1,5 @@
+thinkpad-acpi-patched (3.14) unstable; urgency=medium
+
+  * Initial release
+
+ -- Julian Andres Klode <jak@debian.org>  Wed, 19 Mar 2014 17:01:45 +0100
