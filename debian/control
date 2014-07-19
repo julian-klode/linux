@@ -2,12 +2,10 @@ Source: thinkpad-acpi-patched
 Section: misc
 Priority: optional
 Maintainer: Julian Andres Klode <jak@debian.org>
-Uploaders: Kel Modderman <kel@otaku42.de>
 Standards-Version: 3.9.5
-Build-Depends: debhelper (>= 9), bzip2, dkms
-Vcs-Git: git://git.debian.org/git/collab-maint/ndiswrapper.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/ndiswrapper.git;a=summary
-Homepage: http://ndiswrapper.sourceforge.net/
+Build-Depends: debhelper (>= 9), dkms
+Vcs-Git: https://github.com/julian-klode/linux.git
+Vcs-Browser: https://github.com/julian-klode/linux
 
 Package: thinkpad-acpi-patched-dkms
 Architecture: all
