@@ -79,6 +79,7 @@
 #include <linux/acpi.h>
 #include <linux/pci_ids.h>
 #include <linux/thinkpad_acpi.h>
+#include <linux/version.h>
 #include <sound/core.h>
 #include <sound/control.h>
 #include <sound/initval.h>
@@ -6912,9 +6913,14 @@ static int __init volume_create_alsa_mixer(void)
 	struct snd_kcontrol *ctl_mute;
 	int rc;
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,15,0))
+	rc = snd_card_create(alsa_index, alsa_id, THIS_MODULE,
+			    sizeof(struct tpacpi_alsa_data), &card);
+#else
 	rc = snd_card_new(&tpacpi_pdev->dev,
 			  alsa_index, alsa_id, THIS_MODULE,
 			  sizeof(struct tpacpi_alsa_data), &card);
+#endif
 	if (rc < 0 || !card) {
 		pr_err("Failed to create ALSA card structures: %d\n", rc);
 		return 1;
@@ -6965,6 +6971,9 @@ static int __init volume_create_alsa_mixer(void)
 	}
 	data->ctl_mute_id = &ctl_mute->id;
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,15,0))
+	snd_card_set_dev(card, &tpacpi_pdev->dev);
+#endif
 	rc = snd_card_register(card);
 	if (rc < 0) {
 		pr_err("Failed to register ALSA card: %d\n", rc);
