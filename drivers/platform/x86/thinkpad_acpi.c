@@ -8941,7 +8941,7 @@ static int __init battery_init(struct ibm_init_struct *iibm)
 		};
 		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
 			.attr = __ATTR(inhibit_charge_minutes,
-				       S_IWUSR,
+				       S_IWUSR | S_IRUGO,
 				       battery_inhibit_charge_minutes_show,
 				       battery_inhibit_charge_minutes_store),
 			.var = (void *)(unsigned long) (i + 1)
