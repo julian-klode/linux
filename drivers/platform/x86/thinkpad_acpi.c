@@ -8837,6 +8837,24 @@ static ssize_t battery_force_discharge_ac_break_store(struct device *dev,
 	return count;
 }
 
+static ssize_t battery_inhibit_charge_minutes_show(struct device *dev,
+						struct device_attribute *attr,
+						char *buf)
+{
+	int bat = battery_attribute_get_battery(attr);
+	int value;
+
+	if (!hkey_handle || !acpi_evalf(hkey_handle, &value, "BICG",
+					"dd", bat))
+		return -EIO;
+
+	if ((value & 1) == 0) {
+		return snprintf(buf, PAGE_SIZE, "0\n");
+	}
+
+	return snprintf(buf, PAGE_SIZE, "%d\n", (value >> 8) & 0xFFFF);
+}
+
 static ssize_t battery_inhibit_charge_minutes_store(struct device *dev,
 						struct device_attribute *attr,
 						const char *buf, size_t count)
@@ -8924,7 +8942,7 @@ static int __init battery_init(struct ibm_init_struct *iibm)
 		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
 			.attr = __ATTR(inhibit_charge_minutes,
 				       S_IWUSR,
-				       NULL,
+				       battery_inhibit_charge_minutes_show,
 				       battery_inhibit_charge_minutes_store),
 			.var = (void *)(unsigned long) (i + 1)
 		};
