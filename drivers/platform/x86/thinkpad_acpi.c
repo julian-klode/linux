@@ -8851,6 +8851,9 @@ static ssize_t battery_inhibit_charge_minutes_show(struct device *dev,
 	if ((value & 1) == 0) {
 		return snprintf(buf, PAGE_SIZE, "0\n");
 	}
+	if (((value >> 8) & 0xFFFF) == 0) {
+		return snprintf(buf, PAGE_SIZE, "-1\n");
+	}
 
 	return snprintf(buf, PAGE_SIZE, "%d\n", (value >> 8) & 0xFFFF);
 }
@@ -8867,10 +8870,16 @@ static ssize_t battery_inhibit_charge_minutes_store(struct device *dev,
 	if (res || value > 720 || value < -1)
 		return res ? res : -EINVAL;
 
-	if (value == -1)
+	switch (value) {
+	case -1:	/* infinite time */
 		value = 1;
-	else
-		value = (value << 8) | (value & 1);
+		break;
+	case 0:		/* disabled */
+		break;
+	default:	/* time in minutes */
+		value = (value << 8) | 1;
+		break;
+	}
 
 	value |= (bat << 4);
 
