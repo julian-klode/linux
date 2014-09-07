@@ -1,4 +1,5 @@
 #!/usr/bin/make -f
+JAK=$(shell dpkg-parsechangelog | sed -nr 's/^Version: .*(jak[0-9]+)/\1/p')
 VERSION=$(shell dpkg-parsechangelog | sed -n 's/^Version: *\([^-]\+\)/\1/p')
 %:
 	dh $@ --with=dkms
@@ -13,7 +14,7 @@ override_dh_auto_configure:
 override_dh_auto_install:
 	mkdir -p  debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)
 	cp debian/Makefile debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)
-	sed -r 's/#define TPACPI_VERSION "(.*)"/#define TPACPI_VERSION "\1jak2"/g' drivers/platform/x86/thinkpad_acpi.c  > debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)/thinkpad_acpi.c
+	sed -r 's/#define TPACPI_VERSION "(.*)"/#define TPACPI_VERSION "\1$(JAK)"/g' drivers/platform/x86/thinkpad_acpi.c  > debian/thinkpad-acpi-patched-dkms/usr/src/thinkpad-acpi-patched-$(VERSION)/thinkpad_acpi.c
 
 override_dh_auto_test:
 
