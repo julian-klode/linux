@@ -1,6 +1,7 @@
 thinkpad-acpi-patched (3.16jak2) unstable; urgency=medium
 
   * Make inhibit_charge_minutes readable
+  * Fix setting inhibit_charge_minutes for even amount of seconds
 
  -- Julian Andres Klode <jak@debian.org>  Sun, 07 Sep 2014 14:12:18 +0200
 
