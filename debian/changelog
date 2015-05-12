@@ -1,3 +1,9 @@
+thinkpad-acpi-patched (4.0jak1) unstable; urgency=medium
+
+  * Rebase to v4.0
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 12 May 2015 17:39:22 +0200
+
 thinkpad-acpi-patched (3.17jak3) unstable; urgency=medium
 
   * Rebase to v3.17-rc3
